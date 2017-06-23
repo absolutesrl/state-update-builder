@@ -1,11 +1,11 @@
 {
   "name": "state-update-builder",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A javascript utility to navigate, update and then generate versionable copies of plain js objects",
   "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-	"start": "webpack -p"
+    "start": "webpack -p"
   },
   "repository": {
     "type": "git",
