@@ -1,6 +1,6 @@
 {
   "name": "state-update-builder",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A javascript utility to navigate, update and then generate versionable copies of plain js objects",
   "main": "dist/index.js",
   "scripts": {
