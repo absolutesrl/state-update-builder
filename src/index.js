@@ -162,7 +162,7 @@ export default class StateUpdateBuilder {
 
         if (node == undefined) return this;
 
-        if (Array.isArray(node)) {
+        if (Array.isArray(node) && typeof lambda === 'function') {
             var elemIndex = node.findIndex(lambda);
             this.current[label].splice(elemIndex, 1);
             return this;
