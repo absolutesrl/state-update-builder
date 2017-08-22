@@ -64,9 +64,10 @@ Name|Description|Return
 ```splice(label:string, array:Array of Array)```| for each item of "array" calls splice on "label" array (original object wont be affected)|current SUB
 ```apply(label:string, fn:function)```| calls "fn" passing the value of "label" then update "label" with the function result|current SUB
 
-#### API to manage Errors
+#### API to manage Current State
 Name|Description|Return
 ----|-----------|------
+```checkNodeUpdated()```|check if node related to current SUB has been modified|bool
 ```checkError()```|check if current SUB is in error|bool
 ```resetError()```|remove error status to current SUB and to related ancestors|void
 
