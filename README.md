@@ -61,7 +61,7 @@ Name|Description|Return
 ```removeNode(label:string [, lambda:function])```| remove "label" subtree (original object wont be affected). If "label" is an array and you you can pass lambda to select the element you want to remove (without lambda the whole array will be removed)|current SUB
 ```push(label:string, array:Array)```|add "array" elements into "label" array (original object wont be affected)|current SUB
 ```unshift(label:string, array:Array)```|remove "array" elments from "label" array (original object wont be affected)|current SUB
-```splice(label:string, array:Array of Array)```| for each item of "array" calls splice on "label" array (original object wont be affected)|current SUB
+```splice(label:string, start:number, deleteCount:number, item1:any, item2:any, ...)```| call splice fn on "label" array|current SUB
 ```apply(label:string, fn:function)```| calls "fn" passing the value of "label" then update "label" with the function result|current SUB
 
 #### API to manage Current State

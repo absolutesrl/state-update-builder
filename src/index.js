@@ -164,7 +164,7 @@ export default class StateUpdateBuilder {
 
         if (Array.isArray(node) && typeof lambda === 'function') {
             var elemIndex = node.findIndex(lambda);
-            this.current[label].splice(elemIndex, 1);
+            elemIndex >= 0 && this.splice(elemIndex, 1);
             return this;
         }
 
@@ -220,19 +220,20 @@ export default class StateUpdateBuilder {
     }
 
     //{$splice: array of arrays} for each item in arrays call splice() on the target with the parameters provided by the item.
-    splice(label, array) {
+    splice(label, ...args) {
         if (this._treeError) return this;
         var node = this.current[label];
-        if (checkNodeUndefined.call(this, node, label) || checkNodeNotArray.call(this, array, label))
+        if (checkNodeUndefined.call(this, node, label) || checkNodeNotArray.call(this, node, label))
             return this;
 
         var newNode = this.current[label] = this.extendNode(node);
-        Array.prototype.splice.apply(newNode, array);
+        Array.prototype.splice.apply(newNode, args);
 
-        this.propagateUpdate(this._updated || array.length > 0);
+        this.propagateUpdate(this._updated || args.length > 0);
 
         return this; //returns the same builder
     }
+
 
     execute() {
         return this.parent
