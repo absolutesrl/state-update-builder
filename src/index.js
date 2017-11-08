@@ -42,7 +42,7 @@ export default class StateUpdateBuilder {
             return Object.assign({}, node);
 
         if (typeof node === 'function')
-            return ()=> node();
+            return () => node();
 
         return node
     }
@@ -76,7 +76,7 @@ export default class StateUpdateBuilder {
             return this;
         }
 
-        var choosePath = (el, i)=> typeof lambda === 'function' ? lambda(el, i) : true;
+        var choosePath = (el, i) => typeof lambda === 'function' ? lambda(el, i) : true;
         var elemIndex = node.findIndex(choosePath);
 
         if (checkListItemUndefined.call(this, elemIndex, label)) return this;
@@ -92,12 +92,32 @@ export default class StateUpdateBuilder {
         return resultBuilder;
     }
 
+    //check "label" node presence
+    checkSubtree(label, lambda) {
+        if (this._treeError) return this;
+
+        const node = this.current[label];
+
+        if (checkNodeUndefined.call(this, node, label))
+            return false;
+
+        if (Array.isArray(node)) {
+            var choosePath = (el, i) => typeof lambda === 'function' ? lambda(el, i) : false;
+            var elemIndex = node.findIndex(choosePath);
+            return elemIndex >= 0;
+        }
+        if (typeof lambda === 'function')
+            return !!lambda(node);
+
+        return true;
+    }
+
     //UPDATE OPERATIONS
     //{$set: any} replace the target entirely.
     set(label, value) {
         if (this._treeError) return this;
 
-        if (_DEV_ && this._options.enableWarnings && this.current[label] === undefined && label !== null)
+        if (this._options.enableWarnings && this.current[label] === undefined && label !== null)
             console.error('SUB - Warning: node "' + label + '" not found');
 
         this.propagateUpdate(this._updated || this.current[label] !== value);
@@ -247,7 +267,7 @@ export default class StateUpdateBuilder {
 
     propagateUpdate(update) {
         this._updated = update;
-        if(update)
+        if (update)
             this.parent && this.parent.propagateUpdate(update);
     };
 
@@ -269,7 +289,7 @@ export default class StateUpdateBuilder {
         if (this._treeError) return this;
 
         var node = this.current[label];
-        if (_DEV_ && this._options.enableWarnings && node === undefined && label !== null)
+        if (this._options.enableWarnings && node === undefined && label !== null)
             console.error('SUB - Warning: node "' + label + '" not found');
 
         if (node != undefined)
@@ -295,6 +315,7 @@ function checkNodeUndefined(node, label) {
         console.error('SUB - Error: node "' + label + '" not found');
     return true;
 }
+
 function checkListItemUndefined(elemIndex, label) {
     if (elemIndex !== -1) return false;
 

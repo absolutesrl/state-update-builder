@@ -50,6 +50,7 @@ Name|Description|Return
 ----|-----------|------
 ```traverseNode(label:string)```|navigate to "label" subtree. "label" prop must be an object|a new StateUpdateBuilder (linked to caller SUB) positioned on "label" subtree
 ```traverseList(label:string, lambda:function)```|navigate from current subtree to "label" array than into the first element of "lambda" that matches lambda condition|a new StateUpdateBuilder (linked to caller SUB) positioned on matched "label" element subtree
+```checkSubtree(label:string, lambda:function)```|check if "label" subtree exists in the currentNode. If "label" is an array you can use "lambda" parameter to check array item like ```traverseList```. If "label" is a node, you can use "lambda" to perform an extra check of its content|bool
 
 #### API to update object subtree
 Name|Description|Return
