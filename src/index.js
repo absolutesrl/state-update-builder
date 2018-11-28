@@ -117,7 +117,7 @@ export default class StateUpdateBuilder {
     set(label, value) {
         if (this._treeError) return this;
 
-        if (this._options.enableWarnings && this.current[label] === undefined && label !== null)
+        if (_DEV_ && this._options.enableWarnings && this.current[label] === undefined && label !== null)
             console.error('SUB - Warning: node "' + label + '" not found');
 
         this.propagateUpdate(this._updated || this.current[label] !== value);
@@ -131,12 +131,12 @@ export default class StateUpdateBuilder {
         if (this._treeError) return this;
 
         if (!this._lastNode) {
-            this.current = node;
             this.propagateUpdate(this._updated || this.current !== node);
+            this.current = node;
         }
         else {
-            this._lastNode[this._refLabel] = node;
             this.propagateUpdate(this._updated || this._lastNode[this._refLabel] !== node);
+            this._lastNode[this._refLabel] = this.current = node;
         }
 
         return this;
@@ -167,11 +167,10 @@ export default class StateUpdateBuilder {
         var elem = this._lastNode ? this._lastNode[this._refLabel] : this.current;
         this.propagateUpdate(this._updated || Object.keys(node).reduce((p, c) => p || elem[c] !== node[c], false));
 
-        if (!this._lastNode) {
+        if (!this._lastNode)
             this.current = Object.assign(this.current, node);
-        }
         else
-            this._lastNode[this._refLabel] = Object.assign(this._lastNode[this._refLabel], node);
+            this._lastNode[this._refLabel] = this.current = Object.assign(this._lastNode[this._refLabel], node);
 
         return this;
     }
@@ -182,9 +181,9 @@ export default class StateUpdateBuilder {
 
         if (node == undefined) return this;
 
-        if (Array.isArray(node) && typeof lambda === 'function') {
+        if (Array.isArray(node)) {
             var elemIndex = node.findIndex(lambda);
-            elemIndex >= 0 && this.splice(elemIndex, 1);
+            this.current[label].splice(elemIndex, 1);
             return this;
         }
 
@@ -254,7 +253,6 @@ export default class StateUpdateBuilder {
         return this; //returns the same builder
     }
 
-
     execute() {
         return this.parent
             ? this.parent.execute()
@@ -281,15 +279,17 @@ export default class StateUpdateBuilder {
         return this;
     }
 
+    //TODO provare checkNodeUpdated, pruneSubtree
     checkNodeUpdated() {
         return this._updated;
     }
 
+    //TODO: remove SUB subtree modifications
     pruneSubtree(label) {
         if (this._treeError) return this;
 
         var node = this.current[label];
-        if (this._options.enableWarnings && node === undefined && label !== null)
+        if (_DEV_ && this._options.enableWarnings && node === undefined && label !== null)
             console.error('SUB - Warning: node "' + label + '" not found');
 
         if (node != undefined)
