@@ -184,6 +184,7 @@ export default class StateUpdateBuilder {
         if (Array.isArray(node)) {
             var elemIndex = node.findIndex(lambda);
             this.current[label].splice(elemIndex, 1);
+            this.propagateUpdate(true);
             return this;
         }
 
