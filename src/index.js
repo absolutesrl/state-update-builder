@@ -133,8 +133,7 @@ export default class StateUpdateBuilder {
         if (!this._lastNode) {
             this.propagateUpdate(this._updated || this.current !== node);
             this.current = node;
-        }
-        else {
+        } else {
             this.propagateUpdate(this._updated || this._lastNode[this._refLabel] !== node);
             this._lastNode[this._refLabel] = this.current = node;
         }
@@ -182,8 +181,11 @@ export default class StateUpdateBuilder {
         if (node == undefined) return this;
 
         if (Array.isArray(node)) {
+            node = this.extendNode(node);
             var elemIndex = node.findIndex(lambda);
-            this.current[label].splice(elemIndex, 1);
+
+            node.splice(elemIndex, 1);
+            this.current[label] = node;
             this.propagateUpdate(true);
             return this;
         }
@@ -299,8 +301,7 @@ export default class StateUpdateBuilder {
             if (this._lastNode == undefined) {
                 if (this._options.errorsLog)
                     console.error('SUB - Error: cannot prune node root');
-            }
-            else
+            } else
                 this._lastNode[this._refLabel] = this.origin;
         }
         return this.parent || this;
