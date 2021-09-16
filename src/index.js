@@ -150,7 +150,7 @@ export default class StateUpdateBuilder {
             return this;
         }
 
-        var node = this.current[label];
+        var node = this.extendNode(this.current[label]);
 
         this.propagateUpdate(this._updated || Object.keys(value).reduce((p, c) => p || node[c] !== value[c], false));
 
